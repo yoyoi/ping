@@ -3,7 +3,7 @@
 # 使用方式: ansible-playbook -i inventory_file single_host_ping.yml
 
 - name: Ping a single host
-  hosts: target_host  # 在inventory中定義的主機或組名
+  hosts: yck  # 在inventory中定義的主機或組名
   gather_facts: no
   
   tasks:
