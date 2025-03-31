@@ -1,29 +1,26 @@
 ---
-# ping_playbook.yml - A simple playbook to test connectivity to hosts with credentials
-# Usage: ansible-playbook -i inventory_file ping_playbook.yml --ask-pass --ask-become-pass
+# single_host_ping.yml - 針對單一主機的簡單 Ping playbook
+# 使用方式: ansible-playbook -i inventory_file single_host_ping.yml
 
-- name: Ping all hosts
-  hosts: all
+- name: Ping a single host
+  hosts: target_host  # 在inventory中定義的主機或組名
   gather_facts: no
   
-    
-  # 方法2: 使用become提升權限
-  become: yes  # 使用sudo
-  become_method: sudo
-  become_user: root  # 提升為root用戶
-  become_password: "yck"  # 不建議直接寫密碼
-
   tasks:
     - name: Ping test
       ansible.builtin.ping:
       register: ping_result
-
-    - name: Display ping results
+      
+    - name: Display ping status
       ansible.builtin.debug:
-        var: ping_result
-        verbosity: 0
-
-    - name: Print success message
-      ansible.builtin.debug:
-        msg: "Successfully connected to {{ inventory_hostname }}"
+        msg: "Host {{ inventory_hostname }} is REACHABLE"
       when: ping_result is success
+      
+    - name: Show failure message if ping fails
+      ansible.builtin.debug:
+        msg: "WARNING: Host {{ inventory_hostname }} is UNREACHABLE!"
+      when: ping_result is failed
+      
+    - name: Show connection details
+      ansible.builtin.debug:
+        msg: "Connection details - Host: {{ inventory_hostname }}, IP: {{ ansible_host | default('Not Specified') }}"
