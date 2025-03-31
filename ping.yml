@@ -1,10 +1,18 @@
 ---
-# ping_playbook.yml - A simple playbook to test connectivity to hosts
-# Usage: ansible-playbook -i inventory_file ping_playbook.yml
+# ping_playbook.yml - A simple playbook to test connectivity to hosts with credentials
+# Usage: ansible-playbook -i inventory_file ping_playbook.yml --ask-pass --ask-become-pass
 
 - name: Ping all hosts
   hosts: all
   gather_facts: no
+  
+    
+  # 方法2: 使用become提升權限
+  become: yes  # 使用sudo
+  become_method: sudo
+  become_user: root  # 提升為root用戶
+  become_password: "yck"  # 不建議直接寫密碼
+
   tasks:
     - name: Ping test
       ansible.builtin.ping:
