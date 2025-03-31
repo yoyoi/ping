@@ -1,0 +1,21 @@
+---
+# ping_playbook.yml - A simple playbook to test connectivity to hosts
+# Usage: ansible-playbook -i inventory_file ping_playbook.yml
+
+- name: Ping all hosts
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Ping test
+      ansible.builtin.ping:
+      register: ping_result
+
+    - name: Display ping results
+      ansible.builtin.debug:
+        var: ping_result
+        verbosity: 0
+
+    - name: Print success message
+      ansible.builtin.debug:
+        msg: "Successfully connected to {{ inventory_hostname }}"
+      when: ping_result is success
